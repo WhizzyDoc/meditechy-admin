@@ -17,7 +17,7 @@ function getSiteInfo() {
             $('#twitter').val(p.twitter)
             $('#facebook').val(p.facebook)
             $('#instagram').val(p.instagram)
-            $('#about').val(p.about)
+            tinymce.activeEditor.setContent(p.about)
             if(p.image) {
                 $('#site-img').attr('src', `${base_image_url}${p.image}`)
             }
@@ -34,6 +34,7 @@ function getSiteInfo() {
     })
     .catch(err => {console.log(err)})
 }
+
 getSiteInfo()
 
 function saveSite() {
@@ -49,7 +50,9 @@ function saveSite() {
     let linkedin = $('#linkedin').val()
     let twitter = $('#twitter').val()
     let insta = $('#instagram').val()
-    let about = $('#about').val()
+    //let about = $('#about-site').val()
+    let about = tinymce.activeEditor.getContent({format: 'html'})
+    console.log(about)
 
     let image = $('#comp_image_in')[0].files[0]
     let logo = $('#comp_logo_in')[0].files[0]
