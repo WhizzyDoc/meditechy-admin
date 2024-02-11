@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title></title>
+<link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="./static/css/fontawesome.css">
+<link rel="stylesheet" type="text/css" href="./static/css/rigan.css">
+<link rel="stylesheet" type="text/css" href="./static/themes/w-theme-blue.css">
+<link rel="stylesheet" type="text/css" href="./dist/semantic.min.css">
+<link rel="stylesheet" type="text/css" href="./static/css/sweetalert.min.css">
+<link rel="stylesheet" type="text/css" href="./static/css/nav.css">
+<script src="./static/module/swif.js"></script>
+<script src="./dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script src="./static/js/bootstrap.min.js"></script>
+<script src="./static/js/sweetalert.min.js"></script>
+<script src="./dist/semantic.min.js"></script>
+<link rel="stylesheet" href="./static/lib/prism.css" />
+<link rel="stylesheet" href="./static/lib/prism2.css" />
+<link rel="stylesheet" href="./static/lib/codemirror.css">
+
+<link rel="stylesheet" href="./static/css/editor_2.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.tiny.cloud/1/thj7ghxl5wq0txwnqm2q5zljxghux23nu0bczxjc5jkw7u4n/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+var on = XJSX.event.on,
+emit = XJSX.event.emit;
+emit("hashchange");
+</script>
+
+<style type="text/css">
+
+</style>
+  <!-- template -->
+  
+  <!-- navigation bar -->
+  <template id="sidenav">
+    <div id="mySidenav" class="sidenav">
+      <h3 class="w-bold-x site-title">
+        <?print: localStorage.site_name?>
+      </h3>
+      <a href="javascript:void(0)" class="closebtn" onclick="openNav()">&times;</a>
+      <a href="#" class="dash-act"><i class="fa fa-th-large"></i> Dashboard</a>
+      <a href="#site" class="site-act"><i class="fa fa-globe"></i> <?print: localStorage.site_name?></a>
+      <a href="#profile" class="pro-act"><i class="fa fa-user"></i> My Profile</a>
+      <a class="accordion user-act"><i class="fa fa-users"></i> Community</a>
+      <ul class="panel">
+        <li><a href="#users" class="users-act"><i class="fa fa-users"></i> Members</a></li>
+        <li><a href="#skills" class="skill-act"><i class="fa fa-briefcase"></i> Sponsors</a></li>
+        <li><a href="#projects" class="emp-act"><i class="fa fa-laptop"></i> Projects</a></li>
+      </ul>
+      
+      <a href="#blogs" class="blog-act"><i class="fa fa-newspaper-o"></i> Blogs</a>
+      <a href="#messages" class="mess-act"><i class="fa fa-envelope"></i> Messages</a>
+      <a href="#notifications" class="note-act"><i class="fa fa-bell"></i> Notifications</a>
+      
+      <a class="accordion set-act"><i class="fa fa-gear"></i> Settings</a>
+      <ul class="panel">
+        <li><a href="#change_password" class="pass-act"><i class="fa fa-key"></i> Password</a></li>
+        <li><a href="#account_settings" class="acc-act"><i class="fa fa-lock"></i> Account Settings</a></li>
+      </ul>
+      <a href="#api_documentation" class="api-act"><i class="fa fa-code"></i> API Docs</a>
+      <a href="#" class="w-text-red logout-btn"><i class="fa fa-power-off"></i> Logout</a>
+    </div>
+    <script src="./static/js/login.js"></script>
+    <script>
+      
+      $('.logout-btn').click(function(e) {
+        e.preventDefault();
+        logout();
+      })
+      $('.resume-act').click(function(e) {
+        e.preventDefault()
+        location.href = `${base_image_url}/resume/${localStorage.username}/`
+      })
+      
+      var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+} 
+
+    </script>
+  </template>
+
+  <!-- header -->
+  <template id="header">
+    <header>
+      
+      <form class="w-margin-right" id="search-form">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search Anything" id="search">
+          <div class="input-group-append">
+            <span class="input-group-text" style="background:none;"><i class="fa fa-search"></i></span>
+          </div>
+        </div>
+      </form>
+      <div class="side-content">
+        <a href="#notifications" class="notification w-margin-right"><i class="fa fa-bell-o"></i> </a>
+        <div class="side-content admin-pro w-margin-right">
+          <img src="./static/image/avatar.png" alt="" class="admin-img" />
+          <div class="h5">
+            <span class="w-bold-x"><?print: localStorage.names?></span><br>
+            <small class="w-bold">Admin</small>
+          </div>
+        </div>
+        <div class="opennav" onclick="openNav()"><i class="fa fa-navicon"></i></div>
+      </div>
+    </header>
+    
+  </template>
+
+  <!-- for dashboard -->
+  <template id="dashboard">
+    
+    <?use-template: "sidenav"?>
+    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+    <main class="">
+      <?use-template: "header"?>
+      <div class="alert-note alert alert-danger">
+        <i class="fa fa-warning"></i> Click <a class="w-text-blue" href="#company_profile">here</a> to add company details.
+      </div>
+      <h3>Welcome Back</h3>
+      <p class="w-text-gray">Use the navigation bar for quick access to all our features</p>
+      
+      <div id="dash-wrapper">
+        <div class="content-area">
+
+          <div class="row mt-4">
+            <div class="w-margin-bottom col-12 col-sm-12 col-md-12 col-lg-12 col-xl-5">
+              <div class="box shadow">
+                <div id="bar"></div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-4">
+              <div class="box shadow">
+                <div id="donutTop"></div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-3">
+              <div class="box shadow">
+                <div id="radialBar1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="dash-menu row">
+        <a href="#projects" class="dash-menu-con col-12 col-sm-5 col-md-5 col-lg-5 col-xl-3">
+          <div class="h5 w-bold-x">Projects</div>
+          <h3><i class="fa fa-code w-text-blue"></i>&nbsp;&nbsp;&nbsp;<span class="w-bold-x pro_no">0</span></h3>
+        </a>
+        <a href="#users" class="dash-menu-con col-12 col-sm-5 col-md-5 col-lg-5 col-xl-3">
+          <div class="h5 w-bold-x">Users</div>
+          <h3><i class="fa fa-users w-text-blue"></i>&nbsp;&nbsp;&nbsp;<span class="w-bold-x user_no">0</span></h3>
+        </a>
+        <a href="#messages" class="dash-menu-con col-12 col-sm-5 col-md-5 col-lg-5 col-xl-3">
+          <div class="h5 w-bold-x">Pending Messages</div>
+          <h3><i class="fa fa-envelope w-text-blue"></i>&nbsp;&nbsp;&nbsp;<span class="w-bold-x mess_no">0</span></h3>
+        </a>
+      </div>
+      <!-- Tables -->
+      <div class="table-responsive">
+        <table class="dash-table table">
+          <thead style="background:#fff">
+            <tr>
+              <th colspan="2" class="w-bold-x">New Notifications</th>
+              <th><u><a href="#notifications">See All Notifications</a></u></th>
+            </tr>
+          </thead>
+          <thead>
+            <tr>
+              <th>Notifications</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="dash-task">
+            <tr>
+              <td colspan="3" class="w-center">
+              <div class="loader">
+                  <div class="ball w-black"></div>
+                  <div class="ball w-black"></div>
+                  <div class="ball w-black"></div>
+              </div>
+              </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <script src="./static/js/chart.js"></script>
+    <script src="./static/js/dashboard.js"></script>
+    <script>
+      $('.dash-act').addClass('active')
+    </script>
+</template>
+
+  <!-- for site info -->
+  <template id="site">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Site Information</h2>
+          <form class="row comp-form" id="comp-form">
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding w-flex w-flex-wrap w-flex-around w-align-center w-margin-bottom">
+              <div class="company_image">
+                <img src="./static/image/logo.png" class="comp_image" id="site-img" alt="" />
+                <label class="comp_image_in" for="comp_image_in"><i class="fa fa-camera"></i></label>
+                <input type="file" accept="image/*" id="comp_image_in" class="comp-im" onchange="readFile(this, 'image');" />
+                <h5>Site Image</h5>
+              </div>
+              <div class="company_image">
+                <img src="./static/image/logo.png" class="comp_image" id="site-logo" alt="" />
+                <label class="comp_image_in" for="comp_logo_in"><i class="fa fa-camera"></i></label>
+                <input type="file" accept="image/*" id="comp_logo_in" class="comp-im" onchange="readFile(this, 'logo');" />
+                <h5>Site Logo</h5>
+              </div>
+              <div class="company_image">
+                <img src="./static/image/logo.png" class="comp_image" id="site-icon" alt="" />
+                <label class="comp_image_in" for="comp_icon_in"><i class="fa fa-camera"></i></label>
+                <input type="file" accept="image/*" id="comp_icon_in" class="comp-im" onchange="readFile(this, 'icon');" />
+                <h5>Site Icon</h5>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+              <div class="form-group">
+                <label for="fname"><span class="w-text-red w-bold">*</span> Site Title:</label>
+                <input type="text" class="form-control" id="title">
+              </div>
+              <div class="form-group">
+                <label for="lname">Site Tagline:</label>
+                <input type="text" class="form-control" id="tagline">
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email">
+              </div>
+              <div class="form-group">
+                <label for="number">Phone Number:</label>
+                <input type="text" class="form-control" id="number" placeholder="e.g 07011223344">
+              </div>
+              <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" class="form-control" id="address">
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+              <div class="form-group">
+                <label for="github">Github Link:</label>
+                <input type="url" class="form-control" id="github">
+              </div>
+              <div class="form-group">
+                <label for="linkedin">LinkedIn Link:</label>
+                <input type="url" class="form-control" id="linkedin">
+              </div>
+              <div class="form-group">
+                <label for="twitter">Twitter Handle:</label>
+                <input type="url" class="form-control" id="twitter">
+              </div>
+              <div class="form-group">
+                <label for="facebook">Facebook Link:</label>
+                <input type="url" class="form-control" id="facebook">
+              </div>
+              <div class="form-group">
+                <label for="instagram">Instagram Link:</label>
+                <input type="url" class="form-control" id="instagram">
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+              <label for="work">About <?print: localStorage.site_name?>:</label>
+              <textarea id="about" class="html-text form-control" rows="15"></textarea>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+              <button type="submit" class="btn btn-block form-btn comp-btn">Save Site Info</button>
+            </div>
+          </form>
+        </main>
+        <script src="./static/js/site.js"></script>
+    <script>
+      $('.site-act').addClass('active');
+      $('#comp-form').submit(function(e) {
+            e.preventDefault();
+            saveSite();
+        })
+    </script>
+  </template>
+
+  <!-- for user profile -->
+  <template id="profile">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Admin Profile</h2>
+          <form class="row comp-form" id="comp-form2">
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+              <div class="company_image">
+                <img src="./static/image/avatar.png" class="comp_image" alt="" />
+                <label class="comp_image_in" for="comp_image_in"><i class="fa fa-camera"></i></label>
+                <input type="file" accept="image/*" id="comp_image_in" class="comp-im" onchange="readFile();" />
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+              <div class="form-group">
+                <label for="fname"><span class="w-text-red w-bold">*</span> First Name:</label>
+                <input type="text" class="form-control" id="fname">
+              </div>
+              <div class="form-group">
+                <label for="lname"><span class="w-text-red w-bold">*</span> Last Name:</label>
+                <input type="text" class="form-control" id="lname">
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+              <div class="form-group">
+                <label for="email"><span class="w-text-red w-bold">*</span> Email:</label>
+                <input type="email" class="form-control" id="email">
+              </div>
+              <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" readonly>
+              </div>
+            </div>
+            
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+              <button type="submit" class="btn btn-block form-btn comp-btn">Save Profile</button>
+            </div>
+          </form>
+        </main>
+        <script src="./static/js/profile.js"></script>
+    <script>
+      $('.pro-act').addClass('active');
+      $('#comp-form2').submit(function(e) {
+            e.preventDefault();
+            saveProfile();
+        })
+    </script>
+  </template>
+
+  <!-- for skills -->
+  <template id="skills">
+    <div class="message-con">
+      <div class="message-box">
+        <h4 class="message-content"></h4>
+        <div class="message-btns">
+          <button class="msg-back-btn w-padding btn btn-danger">No, Go Back</button>
+          <button class="msg-go-btn btn w-padding btn-success" data-id="" data-name="">Yes, Proceed</button>
+        </div>
+      </div>
+    </div>
+    <!-- Add Skill Modal -->
+    <div class="modal fade" id="addSkillModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="add-skill-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add Skill</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="skill-title">Title:</label>
+              <input type="text" class="form-control" id="skill-title" required>
+            </div>
+            <div class="form-group">
+              <label for="skill-des">Description:</label>
+              <textarea class="form-control" rows="5" id="skill-des" required></textarea>
+            </div>
+            <div class="custom-file">
+              <input type="file" accept="image\*" class="custom-file-input skill-image">
+              <label class="custom-file-label" for="skill-image">Choose Image</label>
+            </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success add-skill-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <!-- Add Interest Modal -->
+    <div class="modal fade" id="addInterestModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="add-interest-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add Interest</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="interest-title">Title:</label>
+              <input type="text" class="form-control" id="interest-title" required>
+            </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success add-interest-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <!-- Add Education Modal -->
+    <div class="modal fade" id="addEduModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="add-edu-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add Education</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="">Institution:</label>
+              <input type="text" class="form-control" id="edu-ins" required>
+            </div>
+            <div class="form-group">
+              <label for="">Qualification:</label>
+              <input type="text" class="form-control" id="edu-qua" placeholder="e.g BSc Food Science" required>
+            </div>
+            <div class="form-group">
+              <label for="">Grade:</label>
+              <input type="text" class="form-control" id="edu-grade" placeholder="e.g First Class Honors" required>
+            </div>
+            <div class="form-group">
+              <label for="">Start Date:</label>
+              <input type="date" class="form-control" id="edu-start" required>
+            </div>
+            <div class="form-group">
+              <label for="">End Date:</label>
+              <input type="date" class="form-control" id="edu-end" required>
+            </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success add-edu-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Experience Modal -->
+    <div class="modal fade" id="addExpModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="add-exp-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add Experience</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="">Company Name:</label>
+              <input type="text" class="form-control" id="exp-comp" required>
+            </div>
+            <div class="form-group">
+              <label for="">Job Title:</label>
+              <input type="text" class="form-control" id="exp-title" placeholder="e.g Junior Developer" required>
+            </div>
+            <div class="form-group">
+              <label for="">Location:</label>
+              <input type="text" class="form-control" id="exp-loc" required>
+            </div>
+            <div class="form-group">
+              <label for="">Job Description:</label>
+              <textarea class="form-control" rows="5" id="exp-des" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="">Start Date:</label>
+              <input type="date" class="form-control" id="exp-start" required>
+            </div>
+            <div class="form-group">
+              <label for="">End Date:</label>
+              <input type="date" class="form-control" id="exp-end" required>
+            </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success add-exp-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Reference Modal -->
+    <div class="modal fade" id="addRefModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="add-ref-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add Reference</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="">Full Name:</label>
+              <input type="text" class="form-control" id="ref-name" required>
+            </div>
+            <div class="form-group">
+              <label for="">Job Title:</label>
+              <input type="text" class="form-control" id="ref-title" required>
+            </div>
+            <div class="form-group">
+              <label for="">Company Name:</label>
+              <input type="text" class="form-control" id="ref-comp" value="">
+            </div>
+            <div class="form-group">
+              <label for="">Email:</label>
+              <input type="email" class="form-control" id="ref-email" required>
+            </div>
+            <div class="form-group">
+              <label for="">Phone Number:</label>
+              <input type="tel" class="form-control" id="ref-phone" required>
+            </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success add-ref-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Skills & Experience</h2>
+              <!-- Skills Tables -->
+              <div class="table-responsive">
+                <table class="skill-table table">
+                  <thead style="background:#fff">
+                    <tr>
+                      <th colspan="2" class="w-bold-x">Skills</th>
+                      <th><a href="" data-toggle="modal" data-target="#addSkillModal">Add Skill</a></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th style="min-width:200px;">Description</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="skill-tab">
+                    <tr>
+                      <td colspan="3" class="w-center">
+                      <div class="loader">
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                      </div>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Interests Tables -->
+              <div class="table-responsive">
+                <table class="interest-table table">
+                  <thead style="background:#fff">
+                    <tr>
+                      <th class="w-bold-x">Interests</th>
+                      <th><a href="" data-toggle="modal" data-target="#addInterestModal">Add Interest</a></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="interest-tab">
+                    <tr>
+                      <td colspan="2" class="w-center">
+                      <div class="loader">
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                      </div>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Education Tables -->
+              <div class="table-responsive">
+                <table class="edu-table table">
+                  <thead style="background:#fff">
+                    <tr>
+                      <th colspan="2" class="w-bold-x">Education</th>
+                      <th colspan="2"><a href="" data-toggle="modal" data-target="#addEduModal">Add Education</a></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th style="min-width:250px;">Institution</th>
+                      <th>Qualification</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="edu-tab">
+                    <tr>
+                      <td colspan="4" class="w-center">
+                      <div class="loader">
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                      </div>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Experience Tables -->
+              <div class="table-responsive">
+                <table class="exp-table table">
+                  <thead style="background:#fff">
+                    <tr>
+                      <th colspan="2" class="w-bold-x">Experience</th>
+                      <th colspan="2"><a href="" data-toggle="modal" data-target="#addExpModal">Add Experience</a></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th style="min-width:250px;">Company</th>
+                      <th>Job Title</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="exp-tab">
+                    <tr>
+                      <td colspan="4" class="w-center">
+                      <div class="loader">
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                      </div>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Reference Tables -->
+              <div class="table-responsive">
+                <table class="ref-table table">
+                  <thead style="background:#fff">
+                    <tr>
+                      <th colspan="3" class="w-bold-x">Reference</th>
+                      <th colspan="2"><a href="" data-toggle="modal" data-target="#addRefModal">Add Reference</a></th>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th style="min-width:200px;">Names</th>
+                      <th>Job Title</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="ref-tab">
+                    <tr>
+                      <td colspan="5" class="w-center">
+                      <div class="loader">
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                          <div class="ball w-black"></div>
+                      </div>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+          </div>
+        </main>
+        <script src="./static/js/skill.js"></script>
+    <script>
+      $('.skill-act').addClass('active');
+      $('.user-act').addClass('active');
+      $('#add-skill-form').submit(function(e) {
+        e.preventDefault();
+        addSkill();
+      })
+      $('#add-interest-form').submit(function(e) {
+        e.preventDefault();
+        addInterest();
+      })
+      $('#add-edu-form').submit(function(e) {
+        e.preventDefault();
+        addEducation();
+      })
+      $('#add-exp-form').submit(function(e) {
+        e.preventDefault();
+        addExperience();
+      })
+      $('#add-ref-form').submit(function(e) {
+        e.preventDefault();
+        addReference();
+      })
+      
+        $('.msg-go-btn').click(function() {
+              let id = $(this).data('id')
+              let name = $(this).data('name')
+              //console.log(id)
+              $('.message-con').removeClass('active')
+              switch(name) {
+                case "skill":
+                  deleteSkill(id);
+                  break;
+                case "interest":
+                  deleteInterest(id);
+                  break;
+                case "education":
+                  deleteEducation(id);
+                  break;
+                case "experience":
+                  deleteExperience(id);
+                  break;
+                case "reference":
+                  deleteReference(id);
+                  break;
+              }
+              
+          })
+          $('.msg-back-btn').click(function() {
+              $('.message-con').removeClass('active')
+          })
+      $(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+})
+    </script>
+  </template>
+
+  <!-- Employees Page -->
+  <template id="projects">
+    <!-- reply comment Modal -->
+    <div class="modal fade" id="replyCommentModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="rep-comment-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Reply Comment</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="">Reply:</label>
+              <textarea rows="4" class="form-control" id="reply" required></textarea>
+            </div>
+            <input type="hidden" value="" id="comment_id" />
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success rep-comment-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="message-con">
+      <div class="message-box">
+        <h4 class="message-content"></h4>
+        <div class="message-btns">
+          <button class="msg-back-btn w-padding btn btn-danger">No, Go Back</button>
+          <button class="msg-go-btn btn w-padding btn-success" data-id="" data-name="">Yes, Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <?use-template: "sidenav"?>
+    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+    <main class="">
+      <?use-template: "header"?>
+      <div class="w-flex w-flex-wrap w-flex-between w-align-center">
+        <div class="mb-2">
+          <h3>Projects</h3>
+        </div>
+
+        <button class="add_emp_btn add_btn">Add Project&nbsp;&nbsp;<i class="fa fa-arrow-right"></i></button>
+      </div>
+      <!-- Tables -->
+      <div class="table-responsive">
+        <table class="emp-table table">
+          <thead style="background:#fff">
+            <tr>
+              <th colspan="6">
+                <form class="w-flex w-flex-between w-align-center">
+                  <input type="number" class="form-control" id="emp_per_page" value="10" min="5" placeholder="List per page" style="max-width: 80px" />
+                <div class="input-group" style="margin:0">
+                  <input type="text" class="form-control" placeholder="Search Project" id="emp_search" value="" />
+                  <div class="input-group-append">
+                    <span class="input-group-text" style="background:none;"><i class="fa fa-search"></i></span>
+                  </div>
+                </div>
+                <select class="custom-select cat-filter">
+                  <option value="" selected>All Categories</option>
+                </select>
+                <select class="custom-select sort-filter">
+                  <option value="title" selected>By Title (A-Z)</option>
+                  <option value="-title">By Title (Z-A)</option>
+                  <option value="created">By Date (Old-New)</option>
+                  <option value="-created">By Date (New-Old)</option>
+                </select>
+                <input type="hidden" id="emp_page" value="1" />
+                </form>
+              </th>
+            </tr>
+          </thead>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Database</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody class="emp-list">
+            <tr>
+              <td colspan="5" class="w-center">
+              <div class="loader">
+                  <div class="ball w-black"></div>
+                  <div class="ball w-black"></div>
+                  <div class="ball w-black"></div>
+              </div>
+              </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="page_nos mt-3">
+        <a href="#" class="page_no"><i class="fa fa-angle-left"></i></a>
+
+        <a href="#" class="page_no"><i class="fa fa-angle-right"></i></a>
+      </div>
+    </main>
+
+    <div class="add_edit_emp_con side-con">
+      <div class="alert-note alert alert-danger">
+        <i class="fa fa-warning"></i> Click <a class="w-text-blue" href="#company_profile">here</a> to add company details.
+      </div>
+      <div class="mb-2">
+        <button class="add_emp_btn emp_back_btn"><i class="fa fa-arrow-left"></i></button>
+        <h3>Add Project</h3>
+        <p class="w-text-gray">Set up a new project.</p>
+      </div>
+
+      <form class="row comp-form" id="add-emp-form">
+
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+          <div class="form-group">
+            <label for="pro-title"><span class="w-text-red w-bold">*</span> Title:</label>
+            <input type="text" class="form-control" id="pro-title" required>
+          </div>
+          <div class="form-group">
+            <label for="pro-db"><span class="w-text-red w-bold">*</span> Select Database:</label>
+            <select class="form-control databases" style="height:50px;padding:10px !important;" id="pro-db">
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pro-cat"><span class="w-text-red w-bold">*</span> Select Category:</label>
+            <select class="form-control cats" style="height:50px;padding:10px !important;" id="pro-cat">
+            </select>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input pro-img" id="pro-img">
+            <label class="custom-file-label" for="pro-img">Choose Project Image</label>
+          </div>
+          <div class="form-group">
+            <label for="pro-link">Live Site URL:</label>
+            <input type="url" class="form-control" id="pro-link" value="">
+          </div>
+          <div class="form-group">
+            <label for="pro-git">Github Repository:</label>
+            <input type="url" class="form-control" id="pro-git" value="">
+          </div>
+          <div class="form-group">
+            <label for="">Select Technologies:</label>
+            <div class="w-flex w-flex-start w-align-center w-flex-wrap frame-list">
+              <p>Loading technologies...</p>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+          <label for="pro-des">Project Description:</label>
+          <textarea id="pro-des" class="html-text form-control" rows="20" value=""></textarea>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+          <button type="submit" class="btn btn-block form-btn emp-add-btn">Add Project</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="emp_det_con side-con">
+      <div class="mb-2">
+        <button class="add_emp_btn emp_back_btn2"><i class="fa fa-arrow-left"></i></button>
+        <h3>Project Details</h3>
+      </div>
+
+      <form class="row comp-form" id="edit-emp-form">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+          <div class="company_image proj-img" style="margin-left: 20px;">
+            <img src="" class="emp_image" alt="" />
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+          <div class="form-group">
+            <label for="pro-title2"><span class="w-text-red w-bold">*</span> Title:</label>
+            <input type="text" class="form-control" id="pro-title2" required>
+          </div>
+          <div class="form-group">
+            <label for="pro-db2"><span class="w-text-red w-bold">*</span> Select Database:</label>
+            <select class="form-control databases" style="height:50px;padding:10px !important;" id="pro-db2">
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pro-cat2"><span class="w-text-red w-bold">*</span> Select Category:</label>
+            <select class="form-control cats" style="height:50px;padding:10px !important;" id="pro-cat2">
+            </select>
+          </div>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input pro-img2" id="pro-img2" onchange="readFile()">
+            <label class="custom-file-label" for="pro-img2">Choose Project Image</label>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+          
+          <div class="form-group">
+            <label for="pro-link2">Live Site URL:</label>
+            <input type="url" class="form-control" id="pro-link2" value="">
+          </div>
+          <div class="form-group">
+            <label for="pro-git2">Github Repository:</label>
+            <input type="url" class="form-control" id="pro-git2" value="">
+          </div>
+          <div class="form-group">
+            <label for="">Select Technologies:</label>
+            <div class="w-flex w-flex-start w-align-center w-flex-wrap frame-list2">
+              <p>Loading technologies...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+          <label for="pro-des2">Project Description:</label>
+          <textarea id="pro-des2" class="html-text form-control" rows="20" value=""></textarea>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+          <button class="btn btn-block form-btn emp-edit-btn" data-id=""><i class="fa fa-check-circle"></i> Save Project</button>
+        </div>
+      </form>
+      <div class="w-padding" style="margin:auto">
+        <button class="btn btn-block form-btn emp-del-btn btn-danger w-red" data-id="" data-name=""><i class="fa fa-trash"></i> Delete Project</button>
+      </div>
+    </div>
+
+    <div class="emp_rep_con side-con">
+      <div class="mb-2">
+        <button class="add_emp_btn emp_back_btn3"><i class="fa fa-arrow-left"></i></button>
+        
+      </div>
+
+      <div class="wrapper">
+        <input type="radio" name="slider" checked id="home">
+        <input type="radio" name="slider" id="blog">
+        <input type="radio" name="slider" id="code">
+        <div class="tabs">
+          <label for="home" class="home"><i class="fa fa-comments"></i>Comments</label>
+          <label for="blog" class="blog"><i class="fa fa-bar-chart"></i>Analytics</label>
+          <label for="code" class="code"><i class="fa fa-desktop"></i>Preview</label>
+          <div class="slider"></div>
+        </div>
+        <section>
+          <div class="content content-1">
+            <div class="title">
+              <h3 class="w-bold-x">Comments on <q id="pro-comm-title"></q></h3>
+            </div>
+            <!-- Tables -->
+            <div class="table-responsive">
+              <table class="emp-table table">
+                <thead style="background:#fff">
+                  <tr>
+                    <th colspan="6">
+                      <form class="w-flex w-flex-between w-align-center">
+                        <input type="hidden" id="com_id" value="" />
+                      <div class="input-group" style="margin:0">
+                        <input type="text" class="form-control" placeholder="Search Comments" id="com_search" value="" />
+                        <div class="input-group-append">
+                          <span class="input-group-text" style="background:none;"><i class="fa fa-search"></i></span>
+                        </div>
+                      </div>
+                      <select class="custom-select star-filter">
+                        <option value="star" selected>By Ratings (1-5)</option>
+                        <option value="-star">By Ratings (5-1)</option>
+                        <option value="date">By Date (Old-New)</option>
+                        <option value="-date" selected>By Date (New-Old)</option>
+                      </select>
+                      <input type="hidden" id="com_page" value="1" />
+                      </form>
+                    </th>
+                  </tr>
+                </thead>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Comment</th>
+                    <th style="min-width:150px !important">Rating</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody class="comm-list">
+                  <tr>
+                    <td colspan="5" class="w-center">
+                    <div class="loader">
+                        <div class="ball w-black"></div>
+                        <div class="ball w-black"></div>
+                        <div class="ball w-black"></div>
+                    </div>
+                    </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="com_page_nos mt-3">
+              <a href="#" class="com_page_no"><i class="fa fa-angle-left"></i></a>
+      
+              <a href="#" class="com_page_no"><i class="fa fa-angle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="content content-2">
+            <div class="title">
+              <h3 class="w-bold-x">Project Analytics</h3>
+            </div>
+            <div id="dash-wrapper">
+              <div class="content-area">
+  
+                <div class="row mt-4">
+                  <div class="w-margin-bottom col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="box shadow">
+                      <div id="bar2"></div>
+                    </div>
+                  </div>
+                  <div class="w-margin-bottom col-12 col-sm-12 col-md-12 col-lg-12 col-xl-5">
+                    <div class="box shadow">
+                      <div id="bar5"></div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-4">
+                    <div class="box shadow">
+                      <div id="donutTop2"></div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-5 col-lg-5 col-xl-3">
+                    <div class="box shadow">
+                      <div id="radialBar12"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content content-3">
+            <div class="title">
+              <h3 class="w-bold-x">Live Project Preview</h3>
+            </div>
+            <iframe class="iframe-content" src=""></iframe>
+          </div>
+        </section>
+      </div>
+      
+    </div>
+
+    <script src="./static/js/projects.js"></script>
+    <script src="./static/js/comments.js"></script>
+    <script>
+      $('.emp-act').addClass('active')
+      $('#emp_search').on('input', function() {
+        $('#emp_page').val(1);
+        getProjects();
+      })
+      $('#com_search').on('input', function() {
+        $('#com_page').val(1);
+        let id = $('#com_id').val()
+        getProjectComments(id);
+      })
+      $('#emp_per_page').on('input', function() {
+        $('#emp_page').val(1);
+        getProjects();
+      })
+      $('.cat-filter').on('change', function() {
+        $('#emp_page').val(1);
+        getProjects();
+      })
+      $('.sort-filter').on('change', function() {
+        $('#emp_page').val(1);
+        getProjects();
+      })
+      $('.star-filter').on('change', function() {
+        $('#com_page').val(1);
+        let id = $('#com_id').val()
+        getProjectComments(id);
+      })
+      $('.add_btn').click(function() {
+        $('.add_edit_emp_con').addClass('active')
+        getCategories();
+        getFrameworks();
+        getDatabases();
+      });
+      $('.emp_back_btn').click(function() {
+        $('.add_edit_emp_con').removeClass('active')
+      });
+      $('.emp_back_btn2').click(function() {
+        $('.emp_det_con').removeClass('active')
+      });
+      $('.emp_back_btn3').click(function() {
+        $('.emp_rep_con').removeClass('active')
+      });
+      $('#add-emp-form').submit(function(e) {
+            e.preventDefault();
+            addProject();
+        })
+        $('#edit-emp-form').submit(function(e) {
+            e.preventDefault();
+            editProject();
+        })
+        $('#rep-comment-form').submit(function(e) {
+            e.preventDefault();
+            let id = $('#comment_id').val()
+            replyComment(id);
+        })
+        $('.emp-del-btn').click(function(e) {
+            e.preventDefault();
+            let id = $(this).data('id')
+            let title = $(this).data('name')
+            $('.msg-go-btn').data('id', id)
+            $('.msg-go-btn').data('name', 'project')
+            $('.message-content').html(`Are you sure you want to delete '${title}'?<br>This action is permanent`)
+            //console.log('done')
+            $('.message-con').addClass('active')            
+        })
+        $('.msg-go-btn').click(function() {
+              let id = $(this).data('id')
+              let name = $(this).data('name')
+              //console.log(id)
+              $('.message-con').removeClass('active')
+              switch(name) {
+                case "project":
+                  deleteProject(id);
+                  break;
+                case "comment":
+                  deleteComment(id);
+              }
+              
+          })
+          $('.msg-back-btn').click(function() {
+              $('.message-con').removeClass('active')
+          })
+        // Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+    </script>
+  </template>
+
+  <!-- for messages -->
+  <template id="messages">
+    <!-- reply comment Modal -->
+    <div class="modal fade" id="replyMessageModal">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="rep-message-form">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Reply Message</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="">Reply:</label>
+              <textarea rows="4" class="form-control" id="mess-reply" required></textarea>
+            </div>
+            <input type="hidden" value="" id="message_id" />
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success rep-message-btn">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="message-con">
+      <div class="message-box">
+        <h4 class="message-content"></h4>
+        <div class="message-btns">
+          <button class="msg-back-btn w-padding btn btn-danger">No, Go Back</button>
+          <button class="msg-go-btn btn w-padding btn-success" data-id="">Yes, Proceed</button>
+        </div>
+      </div>
+    </div>
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Messages</h2>
+          <!-- Tables -->
+          <div class="table-responsive">
+            <table class="emp-table table">
+              <thead style="background:#fff">
+                <tr>
+                  <th colspan="6">
+                    <form class="w-flex w-flex-between w-align-center">
+                    <div class="input-group" style="margin:0">
+                      <input type="text" class="form-control" placeholder="Search Messages" id="mess_search" value="" />
+                      <div class="input-group-append">
+                        <span class="input-group-text" style="background:none;"><i class="fa fa-search"></i></span>
+                      </div>
+                    </div>
+                    <input type="hidden" id="mess_page" value="1" />
+                    </form>
+                  </th>
+                </tr>
+              </thead>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th style="min-width:250px !important">Message</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody class="mess-list">
+                <tr>
+                  <td colspan="4" class="w-center">
+                  <div class="loader">
+                      <div class="ball w-black"></div>
+                      <div class="ball w-black"></div>
+                      <div class="ball w-black"></div>
+                  </div>
+                  </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="com_page_nos mt-3">
+            <a href="#" class="com_page_no"><i class="fa fa-angle-left"></i></a>
+    
+            <a href="#" class="com_page_no"><i class="fa fa-angle-right"></i></a>
+          </div>
+        </main>
+        <script src="./static/js/message.js"></script>
+    <script>
+      $('.mess-act').addClass('active');
+      $('#mess_search').on('input', function() {
+        $('#mess_page').val(1);
+        getMessages();
+      })
+      $('.msg-go-btn').click(function() {
+        let id = $(this).data('id')
+        //console.log(id)
+        $('.message-con').removeClass('active')
+        deleteMessage(id);
+      })
+      $('.msg-back-btn').click(function() {
+              $('.message-con').removeClass('active')
+          })
+      $('#rep-message-form').submit(function(e) {
+            e.preventDefault();
+            let id = $('#message_id').val()
+            replyMessage(id);
+        })
+    </script>
+  </template>
+
+  <!-- for notifications -->
+  <template id="notifications">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">notifications</h2>
+
+          <div class="table-responsive">
+            <table class="emp-table table">
+              <thead style="background:#fff">
+                <tr>
+                  <th colspan="6">
+                    <form class="w-flex w-flex-between w-align-center note-tab-head">
+                    <div class="input-group w-margin-left" style="margin:0">
+                      <input type="text" class="form-control" placeholder="Search Notifications" id="note_search" value="" />
+                      <div class="input-group-append">
+                        <span class="input-group-text" style="background:none;"><i class="fa fa-search"></i></span>
+                      </div>
+                    </div>
+                    <select style="max-width:100px !important" class="custom-select w-block w-margin-left read-filter">
+                      <option value="all" selected>All</option>
+                      <option value="true">Read</option>
+                      <option value="false">Unread</option>
+                    </select>
+                    <input type="hidden" id="note_page" value="1" />
+                    </form>
+                  </th>
+                </tr>
+              </thead>
+              <thead>
+                <tr>
+                  <th style="min-width:250px !important">Notification</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody class="note-list">
+                <tr>
+                  <td colspan="3" class="w-center">
+                  <div class="loader">
+                      <div class="ball w-black"></div>
+                      <div class="ball w-black"></div>
+                      <div class="ball w-black"></div>
+                  </div>
+                  </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="com_page_nos mt-3">
+            <a href="#" class="com_page_no"><i class="fa fa-angle-left"></i></a>
+    
+            <a href="#" class="com_page_no"><i class="fa fa-angle-right"></i></a>
+          </div>
+        </main>
+        <script src="./static/js/notification.js"></script>
+    <script>
+      $('.note-act').addClass('active');
+      $('#note_search').on('input', function() {
+        $('#note_page').val(1);
+        getNotifications();
+      })
+      $('.read-filter').on('change', function() {
+        $('#note_page').val(1);
+        getNotifications();
+      })
+    </script>
+  </template>
+
+  <!-- for API documentation -->
+  <template id="api_documentation">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">API Documentation</h2>
+          <div class="api-main w-padding-top">
+            <div class="loader">
+              <div class="ball w-black"></div>
+              <div class="ball w-black"></div>
+              <div class="ball w-black"></div>
+          </div>
+          </div>
+        </main>
+    <script src="./static/lib/codemirror.js"></script>
+    <script src="./static/lib/codemirror_jsx.js"></script>
+    <script src="./static/js/api.js"></script>
+    <script src="./static/js/editor_2.js"></script>
+    <script src="./static/lib/prism.js"></script>
+    <script src="./static/lib/prism1.js"></script>
+    <script src="./static/lib/prism2.js"></script>
+    <script>
+      $('.api-act').addClass('active');
+    
+
+    
+    </script>
+  </template>
+
+  <!-- for users -->
+  <template id="users">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Users</h2>
+          
+        </main>
+        <script src=""></script>
+    <script>
+      $('.users-act').addClass('active');
+    </script>
+  </template>
+
+  <!-- for change password -->
+  <template id="change_password">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Change Password</h2>
+          <form class="row comp-form" id="change-pass-form">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+              <label for="">Old Password:</label>
+              <div class="input-group mb-3">
+                <input type="password" id="old_pass" class="form-control" required>
+                <div class="input-group-append">
+                  <span class="input-group-text w-black show-pass"><i class="fa fa-eye"></i></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 w-padding">
+              <label for="">New Password:</label>
+              <div class="input-group mb-3">
+                <input type="password" id="new_pass" class="form-control" required>
+                <div class="input-group-append">
+                  <span class="input-group-text w-black show-pass"><i class="fa fa-eye"></i></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 w-padding">
+              <button type="submit" class="btn btn-block form-btn pass-btn">Change Password</button>
+            </div>
+          </form>
+        </main>
+        <script src="./static/js/settings.js"></script>
+    <script>
+      $('.set-act').addClass('active');
+      $('.pass-act').addClass('active');
+      $('.show-pass').click(function() {
+        let inp = $(this).parent('div').siblings('input')
+        if(inp.attr('type') == 'password') {
+          inp.attr('type', 'text')
+        }
+        else {
+          inp.attr('type', 'password')
+        }
+      })
+      $('#change-pass-form').submit(function(e) {
+        e.preventDefault();
+        changePassword();
+      })
+    </script>
+  </template>
+
+  <!-- for account settings -->
+  <template id="account_settings">
+    <?use-template: "sidenav"?>
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <main class="">
+          <?use-template: "header"?>
+          <h2 class="w-bold-x w-center">Account Settings</h2>
+          
+        </main>
+        <script src=""></script>
+    <script>
+      $('.set-act').addClass('active');
+      $('.acc-act').addClass('active');
+    </script>
+  </template>
+
+  <!-- error 404 page -->
+  <template id="404">
+    <?include: "templates/_parts/404.html"?><?end?>
+</template>
+
+<!-- Routes -->
+<!-- homepage -->
+<template route="/">
+  <?use-template: "dashboard"?>
+</template>
+<template route="/site">
+  <?use-template: "site"?>
+</template>
+<template route="/profile">
+  <?use-template: "profile"?>
+</template>
+<template route="/skills">
+  <?use-template: "skills"?>
+</template>
+<template route="/projects">
+  <?use-template: "projects"?>
+</template>
+
+<template route="/messages">
+  <?use-template: "messages"?>
+</template>
+<template route="/notifications">
+  <?use-template: "notifications"?>
+</template>
+<template route="/api_documentation">
+  <?use-template: "api_documentation"?>
+</template>
+<template route="/users">
+  <?use-template: "users"?>
+</template>
+<template route="/change_password">
+  <?use-template: "change_password"?>
+</template>
+<template route="/account_settings">
+  <?use-template: "account_settings"?>
+</template>
+
+</head>
+<body>
+  <script>
+    if(!localStorage.api_key || !localStorage.names) {
+      location.href = './index.html';
+    }
+</script>
+  
+<?on: "hashchange"?>
+
+<?eval:
+"var hash=location.hash
+hash=hash.replace(/^\/?#\/?|^/img,'/')
+var page=document.querySelector(`template[route='${hash}']`)||'404';"?>
+
+
+<?use-template: page?>
+<?end?>
+
+<script src="./static/js/functions.js"></script>
+
+</body>
+</html>                                                                                                                                               
