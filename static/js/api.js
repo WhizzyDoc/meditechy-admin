@@ -564,7 +564,7 @@ function loadApi() {
   $('.api-main').empty();
   for (var i in x) {
       var temp = `
-      <section id="${x[i].value}" class="w-card w-padding">
+      <section id="${x[i].value}" class="w-padding">
           <h3 class="w-bold-xx mt-3">${x[i].title}</h3>
           <div class="table-responsive">
             <table class="table">

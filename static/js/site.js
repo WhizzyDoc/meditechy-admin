@@ -18,7 +18,7 @@ function getSiteInfo() {
             $('#facebook').val(p.facebook)
             $('#instagram').val(p.instagram)
             $('#about-site').val(p.about)
-            //tinymce.activeEditor.setContent(p.about)
+            tinymce.activeEditor.setContent(p.about)
             sessionStorage.setItem('about_site', p.about)
             if(p.image) {
                 $('#site-img').attr('src', `${base_image_url}${p.image}`)

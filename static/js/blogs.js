@@ -284,7 +284,7 @@ function getBlogDetails(id) {
             else if(e.allow_comments === false) {allow='false'}
             $('#blog-allow2').val(allow)
             $('#blog-post2').val(e.post)
-            
+            tinymce.get('blog-post2').setContent(p.about)
             sessionStorage.setItem('blog_post', e.post)
             if(e.image) {
                 $('#b-img').attr('src', `${base_image_url}${e.image}`)
