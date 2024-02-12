@@ -1,5 +1,5 @@
 
-var base_url2 = `https://meditechy.pythonanywhere.com/api/v1/`
+var base_url2 = `https://meditechyafrica.pythonanywhere.com/api/v1/`
 var admin = [
     // For site API
     {
