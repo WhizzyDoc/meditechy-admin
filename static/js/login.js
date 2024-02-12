@@ -35,13 +35,17 @@ function register() {
             location.href = '#';
         }
         else if(data['status'] == 'error') {
+            $('#register_err').html(`<i class="fa fa-warning"></i> ${data['message']}`)
             swal("Error", data['message'], 'error')
+            
         }
         $('.register-btn').html('Create Account').attr('disabled', false)
     })
     .catch(err => {
         console.log(err);
+        $('#register_err').html(`<i class="fa fa-warning"></i> ${err}`)
         $('.register-btn').html('Create Account').attr('disabled', false)
+        swal("Error", err, 'error')
     })
 }
 

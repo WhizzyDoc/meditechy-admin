@@ -17,7 +17,9 @@ function getSiteInfo() {
             $('#twitter').val(p.twitter)
             $('#facebook').val(p.facebook)
             $('#instagram').val(p.instagram)
-            tinymce.activeEditor.setContent(p.about)
+            $('#about-site').val(p.about)
+            //tinymce.activeEditor.setContent(p.about)
+            sessionStorage.setItem('about_site', p.about)
             if(p.image) {
                 $('#site-img').attr('src', `${base_image_url}${p.image}`)
             }
@@ -116,6 +118,12 @@ function saveSite() {
 function initiateTiny() {
     tinymce.init({
         selector: '.html-text',
+        setup: function(editor) {
+            editor.on('init', function(e) {
+                editor.setContent(sessionStorage.about_site)
+                sessionStorage.removeItem('about_site')
+            })
+        },
         plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker linkchecker a11ychecker tinycomments autocorrect typography inlinecss',
         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | tinycomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
         tinycomments_mode: 'embedded',

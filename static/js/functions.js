@@ -35,7 +35,12 @@ function openNav() {
 function showDP() {
   if(localStorage.dp) {
     //console.log(localStorage.dp)
-    //$('.admin-img').attr('src', `${base_image_url}${localStorage.dp}`)
+    $('.admin-img').attr('src', `${base_image_url}${localStorage.dp}`)
   }
 }
 showDP();
+
+function escapeHtml(text) {
+  var escapedText = $('<code>').text(text).html();
+  return escapedText.replace(/\n/g, '&lt;br&gt;')
+}
